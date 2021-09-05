@@ -3,9 +3,7 @@ import { IUsersRepository, ICreateUserDTO } from "../IUsersRepository";
 
 class UsersRepository implements IUsersRepository {
   private users: User[];
-
   private static INSTANCE: UsersRepository;
-
   private constructor() {
     this.users = [];
   }
@@ -24,14 +22,17 @@ class UsersRepository implements IUsersRepository {
     Object.assign(user,{
       name,
       email,
-      created_at: new Date(),
+      admin: false,
+      created_at: new Date();
+      updated_at: new Date();
     })
 
     this.users.push(user);
+    return user;
   }
 
   findById(id: string): User | undefined {
-   return this.users.find((user) => user.id === id);
+    return this.users.find((user) => user.id === id);
   }
 
   findByEmail(email: string): User | undefined {
@@ -39,7 +40,11 @@ class UsersRepository implements IUsersRepository {
   }
 
   turnAdmin(receivedUser: User): User {
-    // Complete aqui
+    Object.assign(receivedUser, {
+      admin: true,
+      updated_at: new Date(),
+    });
+    return receivedUser;
   }
 
   list(): User[] {
